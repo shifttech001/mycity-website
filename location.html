@@ -1,0 +1,38 @@
+<html dir="ltr"><head><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</head><body contenteditable="true">
+
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p>
+
+<script>
+var x = document.getElementById("demo");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";}
+    }
+    
+function showPosition(position) {
+    x.innerHTML="Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude;
+    var MyURL = "https://api.teleport.org/api/locations/" + position.coords.latitude + "," + position.coords.longitude;
+  $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "application/json; charset=utf-8"});
+
+$.getJSON(MyURL,function(data) {
+        var address = data._embedded["location:nearest-cities"][0]._links["location:nearest-city"].href;
+        var address = address.split(":");
+       $('#demo1').text(address[2].slice(0,-1));
+     });
+  }
+</script>
+<p id="demo1"></p>
+
+
+
+</body></html>
